@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>생명샘교회 전교인 180일 성경 통독표</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      margin: 0;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      margin-right: 1rem;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #2d89ef;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1b66c9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 0.6rem;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #eef2f7;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    #progressChart {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📖 생명샘교회 전교인 180일 성경 통독표</h1>
+    <div class="user-input">
+      <label for="username">이름을 입력하세요:</label>
+      <input type="text" id="username" placeholder="예: 홍길동" />
+      <button id="startButton">시작하기</button>
+    </div>
+    <div id="progress-section" class="hidden">
+      <h2 id="welcome"></h2>
+      <div id="summary"></div>
+      <canvas id="progressChart" width="400" height="200"></canvas>
+      <table id="bible-table">
+        <thead>
+          <tr>
+            <th>회차</th>
+            <th>시작</th>
+            <th>종료</th>
+            <th>시편</th>
+            <th>잠언</th>
+            <th>읽음</th>
+            <th>날짜</th>
+          </tr>
+        </thead>
+        <tbody id="bible-body"></tbody>
+      </table>
+    </div>
+  </div>
+<script>
+  const data = Array.from({length: 180}, (_, i) => ({
+    회차: i + 1,
+    시작: `창세기 ${i * 2 + 1}`,
+    종료: `창세기 ${i * 2 + 2}`,
+    시편: `시편 ${i + 1}`,
+    잠언: `잠언 ${i + 1}`
+  }));
+
+  document.getElementById("startButton").addEventListener("click", function startReading() {
+    const username = document.getElementById("username").value.trim();
+    if (!username) {
+      alert("이름을 입력해주세요.");
+      return;
+    }
+    localStorage.setItem("bibleReaderName", username);
+    document.getElementById("progress-section").classList.remove("hidden");
+    document.getElementById("welcome").textContent = `${username}님의 성경 통독 현황입니다.`;
+
+    const tbody = document.getElementById("bible-body");
+    tbody.innerHTML = "";
+
+    data.forEach((item, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.회차}</td>
+        <td>${item.시작}</td>
+        <td>${item.종료}</td>
+        <td>${item.시편}</td>
+        <td>${item.잠언}</td>
+        <td><input type="checkbox" id="check${i}"></td>
+        <td id="date${i}">-</td>
+      `;
+      tbody.appendChild(tr);
+
+      const checkbox = tr.querySelector("input[type='checkbox']");
+      const dateCell = tr.querySelector(`#date${i}`);
+      const day = i + 1;
+      const today = new Date().toISOString().split('T')[0];
+
+      // Load existing state
+      checkbox.checked = localStorage.getItem(`${username}_day${day}`) === '1';
+      dateCell.textContent = localStorage.getItem(`${username}_date${day}`) || "-";
+
+      checkbox.addEventListener("change", () => {
+        const isChecked = checkbox.checked;
+        localStorage.setItem(`${username}_day${day}`, isChecked ? '1' : '0');
+        localStorage.setItem(`${username}_date${day}`, isChecked ? today : '');
+        dateCell.textContent = isChecked ? today : "-";
+
+        const updatedCount = [...document.querySelectorAll("input[type='checkbox']")].filter(cb => cb.checked).length;
+        document.getElementById("summary").textContent = `진도율: ${updatedCount}/180회 (${Math.round((updatedCount / 180) * 100)}%) 완료됨`;
+        renderProgressChart(updatedCount);
+      });
+    });
+
+    const totalChecked = [...document.querySelectorAll("input[type='checkbox']")].filter(cb => cb.checked).length;
+    document.getElementById("summary").textContent = `진도율: ${totalChecked}/180회 (${Math.round((totalChecked / 180) * 100)}%) 완료됨`;
+    renderProgressChart(totalChecked);
+  });
+
+  function renderProgressChart(checked) {
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    if (window.progressChart) window.progressChart.destroy();
+    window.progressChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['완료', '남은'],
+        datasets: [{
+          data: [checked, 180 - checked],
+          backgroundColor: ['#4caf50', '#e0e0e0']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                return `${ctx.label}: ${ctx.parsed}회`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+</script>
+</body>
+</html>
