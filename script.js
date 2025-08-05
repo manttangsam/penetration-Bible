@@ -42,6 +42,5 @@ function drawChart(done,left){
     data:{labels:['완료','남은'],datasets:[{data:[done,left],backgroundColor:['#4caf50','#ccc']}]},
     options:{responsive:true,plugins:{legend:{position:'bottom'}}}
   });
-  window.startReading = startReading;
-
-}
+ }
+ window.startReading = startReading;
