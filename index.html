@@ -4,28 +4,26 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>생명샘교회 전교인 180일 성경 통독표</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Google Font: Noto Serif KR -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-  <script src="data.js" defer></script>
-  <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
   <style>
-    body { font-family: 'Noto Serif KR', serif; background:#f4f6fb; margin:0; padding:1rem; }
+    body { font-family:'Noto Serif KR', serif; background:#f4f6fb; margin:0; padding:1rem; }
     .container { max-width:800px; margin:auto; background:#fff; padding:2rem; border-radius:10px; }
     h1 { text-align:center; }
     .stats { display:flex; justify-content:space-around; margin:1rem 0; }
     .stat-box { color:white; padding:1rem; border-radius:10px; text-align:center; flex:1; margin:0 0.5rem; }
-    .stat-box.done { background: linear-gradient(to right, #4caf50, #81c784); }
-    .stat-box.progress { background: linear-gradient(to right, #2196f3, #64b5f6); }
-    .stat-box.remaining { background: linear-gradient(to right, #ff9800, #ffb74d); }
+    .stat-box.done { background:linear-gradient(to right,#4caf50,#81c784); }
+    .stat-box.progress { background:linear-gradient(to right,#2196f3,#64b5f6); }
+    .stat-box.remaining { background:linear-gradient(to right,#ff9800,#ffb74d); }
     .stat-box h2 { margin:0; font-size:2rem; }
     #progressChart { margin:1rem auto; max-width:400px; display:block; }
     table { width:100%; border-collapse:collapse; margin-top:1rem; }
-    th, td { border:1px solid #ccc; padding:0.5rem; text-align:center; white-space:nowrap; }
+    th,td { border:1px solid #ccc; padding:0.5rem; text-align:center; white-space:nowrap; }
     th { background:#eef2f7; }
     .hidden { display:none; }
   </style>
@@ -52,10 +50,5 @@
       </table>
     </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('startButton').addEventListener('click', startReading);
-    });
-  </script>
 </body>
 </html>
