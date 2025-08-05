@@ -5,22 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>생명샘교회 전교인 180일 성경 통독표</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f6fb; margin:0; padding:1rem; }
-    .container { max-width:800px; margin:auto; background:#fff; padding:2rem; border-radius:10px; }
-    h1 { text-align:center; }
-    .stats { display:flex; justify-content:space-around; margin:1rem 0; }
-    .box { background:#6a11cb; color:#fff; padding:1rem; border-radius:10px; text-align:center; width:30%; }
-    #progressChart { margin:1rem auto; max-width:400px; }
-    table { width:100%; border-collapse:collapse; margin-top:1rem; }
-    th,td { border:1px solid #ccc; padding:0.5rem; text-align:center; }
-    th { background:#eef2f7; }
-    .hidden { display:none; }
-      table th,
-  table td {
+ <style>
+    body {
+      background: #f1f5fb;
+      font-family: 'Black And White Picture', sans-serif;
+    }
+    .progress-container {
+      background: #fff;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      text-align: center;
+      margin: 2rem auto;
+      max-width: 800px;
+    }
+    .stat-box {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      font-size: 1.2rem;
+    }
+    .stat-box h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .chart-placeholder, #chartCanvas {
+      width: 100%;
+      height: 300px;
+      background: #e9ecef;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+    }
+    table th, table td {
     white-space: nowrap;
   }
-  </style>
+</style>
 </head>
 <body>
   <div class="container">
