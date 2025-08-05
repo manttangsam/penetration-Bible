@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>생명샘교회 전교인 180일 성경 통독표</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-  <script src="data.js" defer></script>
-  <script src="script.js" defer></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Font: Noto Serif KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family:'Noto Serif KR', serif; background:#f4f6fb; margin:0; padding:1rem; }
-    .container { max-width:800px; margin:auto; background:#fff; padding:2rem; border-radius:10px; }
-    h1 { text-align:center; }
-    .stats { display:flex; justify-content:space-around; margin:1rem 0; }
-    .stat-box { flex:1; color:white; padding:1rem; border-radius:10px; text-align:center; margin:0 0.5rem; }
-    .stat-box.done { background:linear-gradient(to right,#4caf50,#81c784); }
-    .stat-box.inprogress { background:linear-gradient(to right,#2196f3,#64b5f6); }
-    .stat-box.remaining { background:linear-gradient(to right,#ff9800,#ffb74d); }
-    .stat-box h2 { margin:0; font-size:2rem; }
-    #progressChart { margin:1rem auto; max-width:400px; display:block; }
-    table { width:100%; border-collapse:collapse; margin-top:1rem; }
-    th, td { border:1px solid #ccc; padding:0.5rem; text-align:center; white-space:nowrap; }
-    th { background:#eef2f7; }
-    .hidden { display:none; }
+    body { font-family: 'Noto Serif KR', serif; background: #f4f6fb; margin: 0; padding: 1rem; }
+    .container { max-width: 800px; margin: auto; background: #fff; padding: 2rem; border-radius: 10px; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    .input-group { margin-bottom: 1rem; }
+    .stats { display: flex; justify-content: space-around; margin-top: 1rem; }
+    .stat-box { flex: 1; color: #fff; padding: 1rem; border-radius: 8px; margin: 0 0.5rem; text-align: center; }
+    .done { background: linear-gradient(to right,#4caf50,#81c784); }
+    .inprogress { background: linear-gradient(to right,#2196f3,#64b5f6); }
+    .remaining { background: linear-gradient(to right,#ff9800,#ffb74d); }
+    .stat-box h2 { margin: 0; font-size: 2rem; }
+    #chartContainer { text-align: center; margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; white-space: nowrap; }
+    th { background: #eef2f7; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📖 생명샘교회 전교인 180일 성경 통독표</h1>
-    <div class="d-flex justify-content-center mb-4">
-      <input id="username" type="text" class="form-control w-50 me-2" placeholder="이름을 입력하세요"/>
+    <div class="input-group">
+      <input type="text" id="username" class="form-control" placeholder="이름을 입력하세요">
       <button id="startButton" class="btn btn-primary">시작하기</button>
     </div>
     <div id="stats" class="stats hidden">
@@ -40,11 +40,74 @@
       <div class="stat-box inprogress"><h2 id="percent">0%</h2><div>진행률</div></div>
       <div class="stat-box remaining"><h2 id="leftCount">180</h2><div>남은</div></div>
     </div>
-    <div id="chartContainer" class="progress-container hidden"><canvas id="chartCanvas"></canvas></div>
+    <div id="chartContainer" class="hidden">
+      <canvas id="progressChart" width="200" height="200"></canvas>
+    </div>
     <table id="bibleTable" class="table table-bordered hidden">
-      <thead><tr><th>회차</th><th>시작</th><th>종료</th><th>시편</th><th>잠언</th><th>읽음</th><th>날짜</th></tr></thead>
+      <thead>
+        <tr><th>회차</th><th>시작</th><th>종료</th><th>시편</th><th>잠언</th><th>읽음</th><th>날짜</th></tr>
+      </thead>
       <tbody id="bibleBody"></tbody>
     </table>
   </div>
+
+  <!-- Scripts at end for correct load -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data.js"></script>
+  <script>
+    // Logic
+    let bibleData = window.bibleData;
+    let userKey = '';
+
+    function startReading() {
+      const name = document.getElementById('username').value.trim();
+      if (!name) { alert('이름을 입력해주세요.'); document.getElementById('username').focus(); return; }
+      userKey = 'bible_' + name;
+      document.getElementById('stats').classList.remove('hidden');
+      document.getElementById('chartContainer').classList.remove('hidden');
+      document.getElementById('bibleTable').classList.remove('hidden');
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('bibleBody'); tbody.innerHTML = '';
+      let done = 0;
+      const saved = JSON.parse(localStorage.getItem(userKey) || '{}');
+      bibleData.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.회차}</td><td>${row.시작}</td><td>${row.종료}</td><td>${row.시편}</td><td>${row.잠언}</td>
+          <td><input type="checkbox" id="cb${i}"></td><td id="dt${i}">-</td>`;
+        tbody.appendChild(tr);
+        const cb = document.getElementById('cb'+i);
+        const dt = document.getElementById('dt'+i);
+        cb.checked = !!saved[row.회차];
+        dt.textContent = saved[row.회차] || '-';
+        if (cb.checked) done++;
+        cb.addEventListener('change', () => {
+          if (cb.checked) saved[row.회차] = new Date().toISOString().split('T')[0];
+          else delete saved[row.회차];
+          localStorage.setItem(userKey, JSON.stringify(saved));
+          renderTable();
+        });
+      });
+      document.getElementById('doneCount').textContent = done;
+      document.getElementById('percent').textContent = Math.round(done/bibleData.length*100) + '%';
+      document.getElementById('leftCount').textContent = bibleData.length - done;
+      drawChart(done, bibleData.length - done);
+    }
+
+    function drawChart(done, left) {
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      if (window.chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: ['완료','남은'], datasets: [{ data:[done,left], backgroundColor:['#4caf50','#ccc'] }] },
+        options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+      });
+    }
+
+    document.getElementById('startButton').addEventListener('click', startReading);
+  </script>
 </body>
 </html>
