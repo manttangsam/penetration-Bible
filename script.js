@@ -1,3 +1,5 @@
+const dataEl = document.getElementById('data-json');
+bibleData = JSON.parse(dataEl.textContent);
 let bibleData = [];
 let userKey = '';
 let checkedStatus = {};
