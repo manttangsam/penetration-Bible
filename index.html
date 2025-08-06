@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>생명샘교회 전교인 180일 성경 통독표</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Google Font: Noto Serif KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family:'Noto Serif KR', serif; background:#f4f6fb; margin:0; padding:1rem; }
-    .container { max-width:900px; margin:auto; background:#fff; padding:2rem; border-radius:10px; }
-    h1 { text-align:center; margin-bottom:1rem; }
-    .input-group { display:flex; gap:0.5rem; margin-bottom:1rem; }
-    .stats { display:flex; justify-content:space-around; gap:1rem; margin-top:1rem; }
-    .stat-box { flex:1; color:#fff; padding:1rem; border-radius:8px; text-align:center; }
-    .done { background:#C8E6C9; } /* pastel green */
-    .inprogress { background:#FFEB3B; } /* pastel yellow */
-    .remaining { background:#F8BBD0; } /* pastel pink */
-    .stat-box h2 { margin:0; font-size:2rem; }
-    table { width:100%; border-collapse:collapse; margin-top:1rem; }
-    th,td { border:1px solid #ccc; padding:0.5rem; text-align:center; white-space:nowrap; }
-    th { background:#eef2f7; }
-    .hidden { display:none; }
+    body { font-family: 'Noto Serif KR', serif; background: #f4f6fb; margin: 0; padding: 1rem; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 2rem; border-radius: 10px; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    .input-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .stats { display: flex; justify-content: space-around; gap: 1rem; margin-top: 1rem; }
+    .stat-box { flex: 1; color: #fff; padding: 1rem; border-radius: 8px; text-align: center; }
+    .done { background: #A8E6CF; }
+    .inprogress { background: #FFEB3B; }
+    .remaining { background: #F8BBD0; }
+    .stat-box h2 { margin: 0; font-size: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; white-space: nowrap; }
+    th { background: #eef2f7; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📖 생명샘교회 전교인 180일 성경 통독표</h1>
     <div class="input-group">
-      <input id="nameInput" type="text" class="form-control" placeholder="이름을 입력하세요"/>
-      <button class="btn btn-primary" onclick="startTracking()">시작하기</button>
+      <input id="nameInput" type="text" class="form-control" placeholder="이름을 입력하세요" />
+      <button id="startButton" class="btn btn-primary">시작하기</button>
     </div>
     <div id="progressSection" class="hidden">
       <div class="stats">
@@ -41,10 +42,20 @@
       </div>
       <canvas id="progressChart" class="mt-4" width="300" height="300"></canvas>
       <table id="bibleTable" class="table table-bordered mt-4">
-        <thead><tr><th>회차</th><th>시작</th><th>종료</th><th>시편</th><th>잠언</th><th>읽음</th><th>날짜</th></tr></thead>
+        <thead>
+          <tr><th>회차</th><th>시작</th><th>종료</th><th>시편</th><th>잠언</th><th>읽음</th><th>날짜</th></tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
   </div>
+
+  <!-- Scripts at bottom -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Embed JSON data directly for offline preview -->
+  <script>
+    window.bibleData = " + JSON.stringify(data) + ";
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>
